@@ -1,0 +1,44 @@
+plugins {
+    id("groovy")
+    id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("io.micronaut.application") version "1.5.0"
+}
+
+version = "0.1"
+group = "net.miiingle.files.platform"
+
+repositories {
+    mavenCentral()
+}
+
+micronaut {
+    runtime("lambda")
+    runtime("netty")
+    testRuntime("spock2")
+    processing {
+        incremental(true)
+        annotations("net.miiingle.files.platform.*")
+    }
+}
+
+dependencies {
+    implementation("io.micronaut:micronaut-runtime")
+    implementation("io.micronaut.aws:micronaut-aws-sdk-v2")
+    implementation("javax.annotation:javax.annotation-api")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    implementation("io.micronaut:micronaut-validation")
+
+    testImplementation("io.micronaut:micronaut-function")
+
+    testImplementation("io.micronaut:micronaut-http-client")
+
+}
+
+
+application {
+    mainClass.set("net.miiingle.files.platform.Application")
+}
+java {
+    sourceCompatibility = JavaVersion.toVersion("11")
+    targetCompatibility = JavaVersion.toVersion("11")
+}

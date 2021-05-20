@@ -1,0 +1,6 @@
+micronaut:
+  application:
+    name: platform
+  server:
+    port: 80
+
