@@ -13,6 +13,8 @@ phases:
       - ./gradlew clean test
       - ./gradlew dockerBuildNative
       - docker tag platform:latest $CONTAINER_REPOSITORY_URL:$CODEBUILD_BUILD_NUMBER
+      - docker tag platform:latest $CONTAINER_REPOSITORY_URL:latest
   post_build:
     commands:
       - docker push $CONTAINER_REPOSITORY_URL:$CODEBUILD_BUILD_NUMBER
+      - docker push $CONTAINER_REPOSITORY_URL:latest
