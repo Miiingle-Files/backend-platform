@@ -8,24 +8,11 @@ phases:
       - docker version
       - java --version
       - $(aws ecr get-login --no-include-email)
-      - docker pull postgres:11.10-alpine
-      - docker pull ghcr.io/graalvm/graalvm-ce:java11-21.0.0
-      - docker pull gcr.io/distroless/cc-debian10
-      - docker pull amazoncorretto:11
-      - docker pull liquibase/liquibase
-      - docker images
   build:
     commands:
-      - docker build -t miiingle-user-api-liquibase:latest src/main/resources/liquibase
-      - docker-compose up -d
-      - ./wait-for-keycloak.sh
       - ./gradlew clean test
-      - docker build . -t $CONTAINER_REPOSITORY_URL:latest -t $CONTAINER_REPOSITORY_URL:$CODEBUILD_BUILD_NUMBER
-      - docker build . -f DockerfileNative -t $CONTAINER_REPOSITORY_URL:latest-native -t $CONTAINER_REPOSITORY_URL:$CODEBUILD_BUILD_NUMBER-native
-      - docker images | grep miiingle
+      - ./gradlew dockerBuildNative
+      - docker tag platform:latest $CONTAINER_REPOSITORY_URL:$CODEBUILD_BUILD_NUMBER
   post_build:
     commands:
       - docker push $CONTAINER_REPOSITORY_URL:$CODEBUILD_BUILD_NUMBER
-      - docker push $CONTAINER_REPOSITORY_URL:$CODEBUILD_BUILD_NUMBER-native
-      - docker push $CONTAINER_REPOSITORY_URL:latest
-      - docker push $CONTAINER_REPOSITORY_URL:latest-native
